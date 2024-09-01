@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>商品一覧</title>
+    <style>
+        /* 必要なCSSスタイルを追加 */
+        .container {
+            margin: 0 auto; /* 中央寄せするために追加 */
+            text-align: center; 
+        }
+
+        .product-group{
+            margin: 0; /* 既存のマージンを減らす */
+            padding: 0; /* 下部のパディングを減らす */
+            line-height: 0.8; /* 行の高さを調整する */
+        }
+
+        .product-card {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            margin: 15px;
+        }
+        .product-card input[type="checkbox"] {
+            position: absolute;
+            opacity: 0;
+        }
+        .product-image {
+            width: 5cm;
+            height: 5cm;
+            cursor: pointer;
+        }
+        h2 {
+            font-size: 12px;
+        }
+        h1 {
+            font-size: 24px;
+            text-align: center;
+        }
+
+        #checkout button {
+            width: 5cm; /* 横幅を5センチに設定 */
+            height: 1cm; /* 縦幅を2cmに設定 */
+            background-color: #06C755; /* カラーを指定 */
+            color: white; /* テキストの色を白に設定 */
+            border: none; /* ボーダーを設定しない */
+            cursor: pointer; /* カーソルをポインターに変更 */
+        }
+
+        #total-price {
+            font-size: 20px; /* 例としてフォントサイズを大きくします */
+        }
+
+        /* 選択された商品のスタイル */
+        .product-card input[type="checkbox"]:checked + .product-image-label {
+            border: 2px solid #06C755; /* 選択された商品の画像に境界線を追加 */
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ヘッダー -->
+    <header>
+        <div class="container">
+            <h1>X Order & Pay 商品一覧</h1>
+        </div>
+    </header>
+
+    <!-- 商品一覧 -->
+    <div class="container">
+        
+         <!-- 商品1 -->
+         <div class="product-group"> 
+            <div class="product-card" data-price="520">
+                <h2>ストロベリー ラベンダー ティー ラテ</h2>
+                <input type="checkbox" class="product-checkbox" id="product1">
+                <label class="product-image-label" for="product1">
+                    <img src="./Mobile Order &amp; Pay_files/4524785556645_mop_11.jpg" alt="商品1" class="product-image">
+                </label>
+                <p>¥520</p>
+            </div>
+        </div>
+
+        <!-- 商品2 -->
+        <div class="product-group"> 
+            <div class="product-card" data-price="400">
+                <h2>ドリップ コーヒー</h2>
+                <input type="checkbox" class="product-checkbox" id="product2">
+                <label class="product-image-label" for="product2">
+                    <img src="./Mobile Order &amp; Pay_files/4524785000018_mop_11.jpg" alt="商品2" class="product-image">
+                </label>
+                <p>¥400</p>
+            </div>
+        </div>
+
+        <!-- 商品3 -->
+        <div class="product-group"> 
+            <div class="product-card" data-price="480">
+                <h2>カフェ ミスト</h2>
+                <input type="checkbox" class="product-checkbox" id="product3">
+                <label class="product-image-label" for="product3">
+                    <img src="./Mobile Order &amp; Pay_files/4524785062870_mop_11.jpg" alt="商品3" class="product-image">
+                </label>
+                <p>¥480</p>
+            </div>
+        </div>
+
+        <!-- 商品4 -->
+        <div class="product-group"> 
+            <div class="product-card" data-price="500">
+                <h2>ユースベリー®</h2>
+                <input type="checkbox" class="product-checkbox" id="product4">
+                <label class="product-image-label" for="product4">
+                    <img src="./Mobile Order &amp; Pay_files/4524785309104_mop_11.jpg" alt="商品4" class="product-image">
+                </label>
+                <p>¥500</p>
+            </div>
+        </div>
+    
+        <!-- 商品5 -->
+        <div class="product-group"> 
+            <div class="product-card" data-price="520">
+                <h2>ピンク フルーツ チアアップ</h2>
+                <input type="checkbox" class="product-checkbox" id="product5">
+                <label class="product-image-label" for="product5">
+                    <img src="./Mobile Order &amp; Pay_files/4524785556959_mop_11.jpg" alt="商品5" class="product-image">
+                </label>
+                <p>¥520</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- 合計金額表示と決済ボタン -->
+    <div class="container" id="checkout">
+        <p id="total-price">合計金額: ¥0</p>
+        <button onclick="confirmCheckout()">決済する</button>
+    </div>
+
+    <!-- フッター -->
+    <footer>
+        <div class="container">
+            <p>© 2024 x order & Pay. </p>
+        </div>
+    </footer>
+
+    <script charset="utf-8" src="https://static.line-scdn.net/liff/edge/2.1/sdk.js"></script>
+    <script>
+        $(document).ready(function () {
+            const liffId = "2003820586-rBmZKQmN"; // あなたのLiff IDに置き換える
+            initializeLiff(liffId);
+        })
+
+        function initializeLiff(liffId) {
+            liff.init({
+                liffId: liffId
+            }).then(() => {
+                initializeApp();
+            }).catch((err) => {
+                console.log('LIFF Initialization failed ', err);
+            });
+        }
+
+        function sendText(text) {
+            liff.sendMessages([{
+                'type': 'text',
+                'text': text
+            }]).then(function () {
+                liff.closeWindow();
+            }).catch(function (error) {
+                window.alert('Failed to send message ' + error);
+            });
+        }
+
+        function updateTotalPrice() {
+            let totalPrice = 0;
+            const checkboxes = document.querySelectorAll('.product-checkbox');
+            checkboxes.forEach((checkbox, index) => {
+                if (checkbox.checked) {
+                    const price = parseInt(checkbox.parentElement.getAttribute('data-price'));
+                    totalPrice += price;
+                }
+            });
+            const totalPriceElement = document.getElementById('total-price');
+            totalPriceElement.textContent = `合計金額: ¥${totalPrice}`;
+        }
+
+        function confirmCheckout() {
+            const totalPrice = document.getElementById('total-price').textContent;
+            const confirmed = confirm(`合計金額は ${totalPrice} です。決済しますか？`);
+            if (confirmed) {
+                redirectToCheckout();
+            }
+        }
+
+        function redirectToCheckout() {
+            alert('決済ページに遷移します。');
+        }
+
+        const checkboxes = document.querySelectorAll('.product-checkbox');
+        checkboxes.forEach((checkbox) => {
+            checkbox.addEventListener('change', () => updateTotalPrice());
+        });
+
+    </script>
+</body>
+</html>
