@@ -1,0 +1,82 @@
+#@host=http://localhost:4333
+@host=https://18.181.82.64:4433
+@userId=1
+@token=00001111
+
+### ログイン
+POST {{host}}/login HTTP/1.1
+content-type: application/json
+
+{
+    "email": "hoge@hoge.com",
+    "password": "password1"
+}
+
+### ユーザー登録
+POST {{host}}/add_user HTTP/1.1
+content-type: application/json
+
+{
+    "email": "hoge@hoge.com",
+    "password": "password1",
+    "nickname": "hogehoge",
+    "birthday": "20000101",
+    "gender": 1
+}
+
+### 目標登録
+POST {{host}}/set_target HTTP/1.1
+Authorization: {{token}}
+content-type: application/json
+
+{
+    "user_id": {{userId}},
+    "target": "毎日腕立て101回",
+    "alert_time": "20:15",
+    "alert_days": 3
+}
+
+### アドバイス取得
+GET {{host}}/advices HTTP/1.1
+
+### 記録登録
+POST {{host}}/add_record HTTP/1.1
+Authorization: {{token}}
+content-type: application/json
+
+{
+    "user_id": {{userId}},
+    "title": "集中しやすいジャンルの音楽を聴く",
+    "is_executed": 0,
+    "date": "2024/08/01 21:16:47",
+    "score": 4,
+    "is_target_time": 1,
+    "memo": "memo",
+    "date_string": "20240801"
+}
+
+### 記録削除
+POST {{host}}/delete_records HTTP/1.1
+Authorization: {{token}}
+content-type: application/json
+
+{
+    "user_id": {{userId}}
+}
+
+### パスワードリセット
+POST {{host}}/reset_password HTTP/1.1
+content-type: application/json
+
+{
+    "email": "hoge@hoge2.com"
+}
+
+### パスワード再登録
+POST {{host}}/set_newpassword HTTP/1.1
+content-type: application/json
+
+{
+    "email": "hoge@hoge.com",
+    "password": "password1"
+}
